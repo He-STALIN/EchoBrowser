@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "seanwu.vscode-qt-for-python",
+    "aaron-bond.better-comments",
+    "oderwat.indent-rainbow"
+  ]
+}
