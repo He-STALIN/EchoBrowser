@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты поиска ✦ EchoBrowser</title>
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --panel: rgba(255,255,255,0.04);
+            --accent: #4b93ff;
+            --text: #e6eef8;
+            --muted: #9aa0a6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .search-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .search-header input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+        }
+        .search-header input:focus {
+            border-color: var(--accent);
+        }
+        .search-header button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 24px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .search-header button:hover {
+            background: #6ba5ff;
+        }
+        .result {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        .result-link {
+            color: var(--muted);
+            font-size: 13px;
+            display: block;
+            margin-top: 4px;
+        }
+        .result-desc {
+            color: var(--text);
+            font-size: 14px;
+            margin-top: 6px;
+            opacity: 0.8;
+        }
+        .no-results {
+            color: var(--muted);
+            text-align: center;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-header">
+        <input type="text" id="searchInput" placeholder="Поиск в Google..." value="{{ query }}">
+        <button onclick="search()">Найти</button>
+    </div>
+
+    <div id="results">
+        {% if results %}
+            {% for item in results %}
+                <div class="result">
+                    <a class="result-title" href="{{ item.link }}" target="_blank">{{ item.title }}</a>
+                    <span class="result-link">{{ item.link }}</span>
+                    <div class="result-desc">{{ item.desc }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">Ничего не найдено по запросу «{{ query }}»</div>
+        {% endif %}
+    </div>
+
+    <script>
+        function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = '/search?q=' + encodeURIComponent(query);
+            }
+        }
+        document.getElementById('searchInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') search();
+        });
+    </script>
+</body>
+</html>

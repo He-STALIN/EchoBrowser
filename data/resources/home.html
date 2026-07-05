@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBrowser ✦ Главная</title>
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --panel: rgba(255, 255, 255, 0.039);
+            --accent: #4b93ff;
+            --accent-light: #6ba5ff;
+            --purple: #6d28d9;
+            --orange: #ff8c00;
+            --muted: #9aa0a6;
+            --text: #e6eef8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background: #0a0c10;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background:
+                radial-gradient(ellipse at 20% 80%, #ff8c001f, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, #4b93ff1f, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, #ff8c000a, transparent 40%);
+            z-index: -1;
+            animation: fireflyMove 25s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes fireflyMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(60px, -30px) scale(1.05);
+            }
+            50% {
+                transform: translate(-40px, 50px) scale(0.95);
+            }
+            75% {
+                transform: translate(30px, -40px) scale(1.03);
+            }
+            100% {
+                transform: translate(-20px, 20px) scale(0.98);
+            }
+        }
+
+        /* Основной контент */
+        .browser-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .browser-logo {
+            font-size: 72px;
+            line-height: 1;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .browser-title {
+            font-size: 36px;
+            font-weight: 300 bold;
+            background: linear-gradient(to left, var(--orange), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .browser-subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 32px;
+        }
+
+        .browser-search {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .browser-search input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .browser-search input:focus {
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .search_btn {
+            display: none;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .browser-search .search_btn.show {
+            animation: BtnSmoothIn 0.3s ease-in forwards;
+            display: flex;
+            padding: 12px 28px;
+            border-radius: 40px;
+            border: none;
+            background: linear-gradient(90deg, var(--accent), var(--purple));
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search_btn.hide {
+            animation: BtnSmoothOut 0.3s ease-out reverse forwards;
+        }
+
+        .browser-search .search_btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(75,147,255,0.3);
+        }
+
+        @keyframes BtnSmoothIn {
+            from {
+                transform: translateX(60px);
+                opacity: 0;
+            }
+            to {
+                transfowm: translateX(0px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes BtnSmoothOut {
+            from {
+                transform: translateX(0px);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(60px);
+                opacity: 0;
+            }
+        }
+
+        .browser-footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .browser-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .browser-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Контент -->
+    <main class="browser-content">
+        <svg class="browser-logo" width="150" height="150" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Глобус (основная сетка) -->
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4"/>
+            
+            <!-- Меридианы -->
+            <path d="M3 12H21" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M12 3C14.5 5.5 15.8 8.5 16 12C15.8 15.5 14.5 18.5 12 21C9.5 18.5 8.2 15.5 8 12C8.2 8.5 9.5 5.5 12 3Z" stroke="currentColor" stroke-width="1.4"/>
+            
+            <!-- Орбитальная линия (техно-акцент) -->
+            <path d="M4 8L20 16" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5"/>
+            <path d="M4 16L20 8" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.5"/>
+            
+            <!-- Точка в центре (ядро браузера) -->
+            <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.7"/>
+            </svg>
+        </svg>
+        <h1 class="browser-title">✦ EchoBrowser ✦</h1>
+        <p class="browser-subtitle">Браузер, созданный для скорости и приватности</p>
+
+        <div class="browser-search">
+            <input type="text" placeholder="Найти в сети..." id="searchInput">
+            <button id="searchBtn" class="search_btn " onclick="search()">Поиск</button>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="browser-footer">
+        EchoBrowser · часть экосистемы Echo · 2026
+    </footer>
+
+    <script>
+        function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                const urlbar = document.getElementById('urlbar');
+                if (query.includes('.')) {
+                    window.location.href = 'https://' + encodeURIComponent(query)
+                } else {
+                    window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+                }
+            }
+        }
+        function check_change () {
+            const btn = document.getElementById("searchBtn");
+            if (!document.getElementById('searchInput').value.trim()) {
+                btn.classList.remove('show');
+                btn.classList.add('hide');
+                return
+            }
+            btn.classList.remove('hide');
+            btn.classList.add('show');
+        }
+
+        document.getElementById('searchInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') search();
+        });
+
+        document.getElementById('searchInput').addEventListener('input', () => {check_change()});
+
+        check_change()
+    </script>
+</body>
+</html>
