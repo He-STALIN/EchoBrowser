@@ -1,6 +1,6 @@
 """Главное окно браузера"""
 
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QProgressBar
 from PyQt6.QtGui import QKeySequence, QIcon, QPixmap
 
 from src.ui.tab_manager import TabManager
@@ -51,10 +51,20 @@ class MainWindow(QMainWindow):
         self.navigation_bar.new_tab_clicked.connect(self.new_tab)
         layout.addWidget(self.navigation_bar)
 
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setMaximum(100)
+        self.progress_bar.setObjectName("progressBar")
+        self.progress_bar.setTextVisible(False)
+        self.progress_bar.setVisible(False)
+        layout.addWidget(self.progress_bar)
+
         # Менеджер вкладок
         self.tab_manager = TabManager()
         self.tab_manager.tab_url_changed.connect(self._on_tab_url_changed)
         self.tab_manager.fullscreen_request.connect(self.on_fullscreen_requested)
+        self.tab_manager.lProgress.connect(self.on_progress_update)
+        self.tab_manager.lStarted.connect(self.on_load_started)
+        self.tab_manager.lFinished.connect(self.on_load_finished)
         layout.addWidget(self.tab_manager)
         
         central_widget.setLayout(layout)
@@ -125,6 +135,15 @@ class MainWindow(QMainWindow):
         about_action = help_menu.addAction("О браузере")
         about_action.triggered.connect(self.show_about)
     
+    def on_progress_update(self, progress: int):
+        self.progress_bar.setValue(progress)
+
+    def on_load_started(self):
+        self.progress_bar.setVisible(True)
+
+    def on_load_finished(self):
+        self.progress_bar.setVisible(False)
+
     def setup_shortcuts(self):
         """Установить глобальные горячие клавиши"""
         # Горячие клавиши назначаются через QAction, чтобы избежать конфликтов.

@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QTabWidget
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile
 from PyQt6.QtCore import pyqtSignal, QUrl, Qt
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtGui import QIcon
 import sys
 
 from src.utils import format_url, get_home_page_url
@@ -31,6 +31,10 @@ class BrowserTab(QWebEngineView):
     title_changed = pyqtSignal(str)
     url_changed = pyqtSignal(str)
     FS_request = pyqtSignal()
+    LProgress = pyqtSignal(int)
+    LStarted = pyqtSignal()
+    LFinished = pyqtSignal()
+    IChanged = pyqtSignal(QIcon)
     
     def __init__(self, url: str = "about:blank"):
         super().__init__()
@@ -38,6 +42,10 @@ class BrowserTab(QWebEngineView):
         # Подключить сигналы
         self.titleChanged.connect(self._on_title_changed)
         self.urlChanged.connect(self._on_url_changed)
+        self.loadProgress.connect(self.LProgress.emit)
+        self.loadStarted.connect(self.LStarted.emit)
+        self.loadFinished.connect(self.LFinished.emit)
+        self.iconChanged.connect(self.IChanged.emit)
 
         _setup_params(self) #? Выносим параменты в отдельную функцию, чтобы избежать путаницы в писанине кода
 
@@ -63,12 +71,18 @@ class BrowserTab(QWebEngineView):
         formatted_url = format_url(url)
         self.setUrl(QUrl(formatted_url))
 
+    def _set_update_progress(self, progress: int):
+        self.LProgress.emit(progress)
+
 
 class TabManager(QTabWidget):
     """Менеджер вкладок браузера"""
     
     tab_url_changed = pyqtSignal(str)  # URL текущей вкладки изменился
     fullscreen_request = pyqtSignal()
+    lProgress = pyqtSignal(int)
+    lStarted = pyqtSignal()
+    lFinished = pyqtSignal()
     
     def __init__(self):
         super().__init__()
@@ -91,6 +105,10 @@ class TabManager(QTabWidget):
         tab.title_changed.connect(lambda title: self._update_tab_title(tab, title))
         tab.url_changed.connect(self.tab_url_changed.emit)
         tab.FS_request.connect(self.fullscreen_request.emit)
+        tab.LProgress.connect(self.lProgress.emit)
+        tab.LStarted.connect(self.lStarted.emit)
+        tab.LFinished.connect(self.lFinished.emit)
+        tab.IChanged.connect(self._on_icon_changed)
         
         # Добавить в менеджер
         index = self.addTab(tab, "Загрузка...")
@@ -106,6 +124,10 @@ class TabManager(QTabWidget):
             short_title = title[:30] + "..." if len(title) > 30 else title
             self.setTabText(index, short_title)
     
+    def _on_icon_changed(self, icon):
+        index = self.currentIndex()
+        self.setTabIcon(index, icon)
+
     def _on_current_changed(self, index: int):
         """Обработка смены текущей вкладки"""
         if index != -1:

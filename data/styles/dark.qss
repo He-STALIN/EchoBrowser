@@ -93,10 +93,26 @@ QDialog QLabel {
     border-radius: 12px;
 }
 
-QTabWidget::pane {
-    border: none;
-}
-
 QCheckBox {
     color: #cccccc;
+}
+
+QProgressBar#progressBar {
+    border: none;
+    background: #0a0c10;
+    border-radius: 10px;
+    min-height: 5px;
+    max-height: 5px;
+    text-align: center;
+    color: transparent;
+    font-weight: bold;
+}
+
+QProgressBar#progressBar::chunk {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #ff8c00,
+        stop: 1 #3f8bfd
+    );
+    border-radius: 10px;
 }
