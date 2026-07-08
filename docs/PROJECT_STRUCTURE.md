@@ -5,59 +5,6 @@
 ## Корневая папка
 
 ```
-EchoBrowser/
-├── main.py                 # Точка входа приложения
-├── dev_run.py             # Запуск в режиме разработки
-├── config.py              # Глобальная конфигурация
-├── requirements.txt       # Зависимости Python
-│
-├── src/                   # Исходный код приложения
-│   ├── __init__.py
-│   ├── main_window.py     # Главное окно браузера
-│   ├── tab_manager.py     # Менеджер вкладок
-│   ├── navigation.py      # Панель навигации
-│   ├── home_page.py       # Главная страница
-│   │
-│   ├── settings/          # Модуль настроек
-│   │   ├── __init__.py
-│   │   ├── config.py      # Система конфигурации
-│   │   └── settings_dialog.py  # Диалог настроек
-│   │
-│   ├── ui/                # UI компоненты
-│   │   ├── __init__.py
-│   │   └── styles.py      # Стили приложения
-│   │
-│   └── utils/             # Вспомогательные функции
-│       ├── __init__.py
-│       └── helpers.py     # Утилиты
-│
-├── data/                  # Ресурсы приложения
-│   └── resources/
-│       └── home.html      # HTML главной страницы (создается при запуске)
-│
-├── .vscode/               # Конфигурация VS Code
-│   ├── settings.json      # Рекомендуемые параметры
-│   └── extensions.json    # Рекомендуемые расширения
-│
-├── docs/                  # Документация (планируется)
-|   ├── README.md              # Главная документация
-|   ├── QUICKSTART.md          # Быстрый старт за 30 секунд
-|   ├── INSTALL.md             # Инструкции по установке
-|   ├── ARCHITECTURE.md        # Описание архитектуры
-|   ├── DEVELOPMENT.md         # Руководство разработчика
-|   ├── API_EXAMPLES.md        # Примеры использования API
-|   ├── CONTRIBUTING.md        # Как помочь проекту
-|   ├── CONTRIBUTORS.md        # Список участников
-|   ├── CHANGELOG.md           # История изменений
-|   └── PROJECT_STRUCTURE.md   # Этот файл
-│
-├── tests/                 # Тесты (планируется)
-│
-├── .gitignore             # Исключения для git
-├── .editorconfig          # Настройки редактора
-│
-└── LICENSE                # MIT лицензия
-
 EchoBrowser
 ├── .editorconfig          # Настройки редактора
 ├── .gitignore             # Исключения git
