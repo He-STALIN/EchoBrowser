@@ -2,7 +2,7 @@
 
 from PyQt6.QtWidgets import QTabWidget
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineFullScreenRequest
 from PyQt6.QtCore import pyqtSignal, QUrl, Qt
 from PyQt6.QtGui import QIcon
 import sys
@@ -14,15 +14,24 @@ def _setup_params(self):
     self.setAttribute(Qt.WidgetAttribute.WA_OpaquePaintEvent, True)
     self.setAutoFillBackground(True)
 
+    #? отрисовка через GPU
     self.settings().setAttribute(
         QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, config.USE_GPU_RENDER
     )
+
+    #? Включаем возможность перехода в полноэкранный режим
     self.settings().setAttribute(
         QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, config.FULLSCREEN_SUPPORT_EN
     )
 
+    #? разрешаем использование локального хранилища
     self.settings().setAttribute(
         QWebEngineSettings.WebAttribute.LocalStorageEnabled, config.LOCAL_STORAGE_EN
+    )
+
+    #? включаем сохранение куки
+    QWebEngineProfile.defaultProfile().setPersistentCookiesPolicy(
+        QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies
     )
 
 class BrowserTab(QWebEngineView):
@@ -30,7 +39,7 @@ class BrowserTab(QWebEngineView):
     
     title_changed = pyqtSignal(str)
     url_changed = pyqtSignal(str)
-    FS_request = pyqtSignal()
+    FS_request = pyqtSignal(QWebEngineFullScreenRequest)
     LProgress = pyqtSignal(int)
     LStarted = pyqtSignal()
     LFinished = pyqtSignal()
@@ -79,7 +88,7 @@ class TabManager(QTabWidget):
     """Менеджер вкладок браузера"""
     
     tab_url_changed = pyqtSignal(str)  # URL текущей вкладки изменился
-    fullscreen_request = pyqtSignal()
+    fullscreen_request = pyqtSignal(QWebEngineFullScreenRequest)
     lProgress = pyqtSignal(int)
     lStarted = pyqtSignal()
     lFinished = pyqtSignal()
@@ -138,8 +147,7 @@ class TabManager(QTabWidget):
     def close_tab(self, index: int):
         """Закрыть вкладку"""
         if self.count() == 1:
-            # Если это последняя вкладка, создать новую
-            # self.new_tab()
+            #? Если это последняя вкладка, закрыть браузер полностью
             sys.exit()
         self.removeTab(index)
     

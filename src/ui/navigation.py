@@ -37,7 +37,6 @@ class NavigationBar(QWidget):
         self.forward_btn.setMaximumWidth(40)
         self.forward_btn.clicked.connect(self.forward_clicked.emit)
         self.forward_btn.setToolTip("Вперед")
-        self.forward_btn.setVisible(False)
         layout.addWidget(self.forward_btn)
         
         # Кнопка обновления

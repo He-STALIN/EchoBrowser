@@ -2,6 +2,7 @@
 
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QProgressBar
 from PyQt6.QtGui import QKeySequence, QIcon, QPixmap
+from PyQt6.QtWebEngineCore import QWebEngineFullScreenRequest
 
 from src.ui.tab_manager import TabManager
 from src.ui.navigation import NavigationBar
@@ -227,15 +228,14 @@ class MainWindow(QMainWindow):
         self.tab_manager.close_all_tabs()
         event.accept()
 
-    def on_fullscreen_requested(self):
+    def on_fullscreen_requested(self, request: QWebEngineFullScreenRequest):
         # Разрешаем полноэкранный режим
         # Переключаем окно в полноэкранный режим
-        print(self.FullScreenEN)
-        if self.FullScreenEN:
-            print("trying to normal mode")
-            self.showNormal()
-            self.FullScreenEN = False
-        else:
-            print("Trying to fullscreen Mode")
-            self.FullScreenEN = True
+        if request.toggleOn():
+            print('trying fullscreen')
             self.showFullScreen()
+        else:
+            print('trying normal')
+            self.showNormal()
+
+        request.accept()

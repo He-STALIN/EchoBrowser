@@ -1,6 +1,6 @@
 """Диалог настроек браузера"""
 
-from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QTabWidget, 
+from PyQt6.QtWidgets import(QDialog, QVBoxLayout, QHBoxLayout, QTabWidget, 
                             QWidget, QComboBox, QCheckBox, QSpinBox, QPushButton,
                             QGroupBox, QFormLayout, QSizePolicy)
 from PyQt6.QtCore import Qt

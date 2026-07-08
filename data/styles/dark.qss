@@ -39,22 +39,33 @@ QPushButton:pressed {
     background-color: #3e3e42;
 }
 
+QTabWidget::pane {
+    border: none;
+    background: transparent;
+}
+
+QTabBar {
+    background: transparent;
+    padding: 0px;
+}
+
 QTabBar::tab {
-    background-color: #2d2d30;
-    border: 1px solid #3e3e42;
-    border-bottom: none;
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 8px 0 0;
     border-radius: 10px;
     color: #cccccc;
-    padding: 8px 15px;
-    margin-right: 2px;
 }
 
 QTabBar::tab:selected {
-    background-color: #1e1e1e;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 2px solid #3f8bfd;
+    color: white;
 }
 
-QTabWidget::pane {
-    border: 1px solid #3e3e42;
+QTabBar::tab:hover {
+    background: rgba(255, 255, 255, 0.04);
 }
 
 QMenuBar {

@@ -4,9 +4,11 @@ from pathlib import Path
 #* === PATHS ===
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
+COOKIES_DIR = DATA_DIR / "cookies"
 STYLES_DIR = DATA_DIR / "styles"
 RESOURCES_DIR = DATA_DIR / "resources"
 CONFIG_FILE = BASE_DIR / "data" / "cfg" / "settings.json"
+os.makedirs(COOKIES_DIR, exist_ok=True)
 
 #* === UI ===
 WINDOW_WIDTH = 1200
