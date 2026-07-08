@@ -3,6 +3,7 @@ from pathlib import Path
 
 #* === PATHS ===
 BASE_DIR = Path(__file__).parent
+LOG_FILE = BASE_DIR / "logs" / "log.log"
 DATA_DIR = BASE_DIR / "data"
 COOKIES_DIR = DATA_DIR / "cookies"
 STYLES_DIR = DATA_DIR / "styles"

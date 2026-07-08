@@ -1,6 +1,7 @@
 """Вспомогательные функции для EchoBrowser"""
 
 from urllib.parse import urljoin, urlparse
+from .logger import default_logger as logger
 import json
 from pathlib import Path
 
@@ -46,7 +47,7 @@ def load_json_file(file_path: Path) -> dict:
             with open(file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
     except Exception as e:
-        print(f"Error loading JSON: {e}")
+        logger.error(f"Error loading JSON: {e}")
     return {}
 
 
@@ -58,5 +59,5 @@ def save_json_file(file_path: Path, data: dict) -> bool:
             json.dump(data, f, indent=2, ensure_ascii=False)
         return True
     except Exception as e:
-        print(f"Error saving JSON: {e}")
+        logger.error(f"Error saving JSON: {e}")
         return False

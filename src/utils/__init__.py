@@ -1,4 +1,5 @@
 from .helpers import format_url, is_valid_url, load_json_file, save_json_file
+from .logger import default_logger, get_logger
 from .home_page import get_home_page_url
 
 __all__ = [
@@ -6,5 +7,7 @@ __all__ = [
     'is_valid_url',
     'load_json_file',
     'save_json_file',
-    'get_home_page_url'
+    'get_home_page_url',
+    'default_logger',
+    'get_logger'
 ]

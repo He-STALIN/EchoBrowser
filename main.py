@@ -7,11 +7,12 @@ EchoBrowser - Современный браузер на PyQt6
 import sys
 from PyQt6.QtWidgets import QApplication
 from src.ui.main_window import MainWindow
+from src.utils.logger import default_logger as logger
 
 
 def main():
     """Основная функция приложения"""
-    
+    logger.info("Starting browser...")
     # Создать приложение
     app = QApplication(sys.argv)
 

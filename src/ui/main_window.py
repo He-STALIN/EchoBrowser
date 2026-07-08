@@ -9,6 +9,7 @@ from src.ui.navigation import NavigationBar
 from src.ui.styles import get_stylesheet
 from src.settings.settings_dialog import SettingsDialog, settings
 from src.utils import get_home_page_url
+from src.utils import default_logger as logger
 import config
 
 class MainWindow(QMainWindow):
@@ -25,7 +26,6 @@ class MainWindow(QMainWindow):
         # Инициализация UI
         self.init_ui()
         self.apply_theme()
-        self.FullScreenEN = False
         
         # Загрузить главную страницу
         self.load_home_page()
@@ -144,14 +144,10 @@ class MainWindow(QMainWindow):
 
     def on_load_finished(self):
         self.progress_bar.setVisible(False)
-
-    def setup_shortcuts(self):
-        """Установить глобальные горячие клавиши"""
-        # Горячие клавиши назначаются через QAction, чтобы избежать конфликтов.
-        pass
     
     def apply_theme(self):
         """Применить тему к приложению"""
+        logger.info('loading theme...')
         theme = settings.get("theme", "light")
         stylesheet = get_stylesheet(theme)
         self.setStyleSheet(stylesheet)
@@ -169,6 +165,7 @@ class MainWindow(QMainWindow):
         """Перейти по URL"""
         current_tab = self.tab_manager.get_current_tab()
         if current_tab:
+            logger.info('loading page...')
             current_tab.load_url(url)
     
     def go_back(self):
@@ -187,6 +184,7 @@ class MainWindow(QMainWindow):
         """Обновить страницу"""
         current_tab = self.tab_manager.get_current_tab()
         if current_tab:
+            logger.info('reloading page...')
             current_tab.reload()
     
     def load_home_page(self):
@@ -201,15 +199,8 @@ class MainWindow(QMainWindow):
     def open_settings(self):
         """Открыть диалог настроек"""
         settings_dialog = SettingsDialog(self)
-        if settings_dialog.exec() == settings_dialog.accepted:
+        if settings_dialog.show() == settings_dialog.accepted:
             self.apply_theme()
-    
-    def toggle_fullscreen(self):
-        """Переключить полноэкранный режим"""
-        if self.isFullScreen():
-            self.showNormal()
-        else:
-            self.showFullScreen()
     
     def show_about(self):
         """Показать информацию о браузере"""
@@ -217,7 +208,7 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
             self,
             "О браузере EchoBrowser",
-            f"EchoBrowser v0.1.0\n\n"
+            f"EchoBrowser v0.2.3\n\n"
             f"Современный браузер на PyQt6\n\n"
             f"© 2024 Echo Project\n"
             f"Все права защищены"
@@ -232,10 +223,10 @@ class MainWindow(QMainWindow):
         # Разрешаем полноэкранный режим
         # Переключаем окно в полноэкранный режим
         if request.toggleOn():
-            print('trying fullscreen')
+            logger.info('trying fullscreen')
             self.showFullScreen()
         else:
-            print('trying normal')
+            logger.info('trying normal')
             self.showNormal()
 
         request.accept()

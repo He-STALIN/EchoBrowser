@@ -8,6 +8,7 @@ from PyQt6.QtGui import QIcon
 import sys
 
 from src.utils import format_url, get_home_page_url
+from src.utils import default_logger as logger
 import config
 
 def _setup_params(self):
@@ -108,8 +109,9 @@ class TabManager(QTabWidget):
     
     def new_tab(self, url: str = "about:blank") -> BrowserTab:
         """Создать новую вкладку"""
+        logger.info("creating a new tab...")
         tab = BrowserTab(url)
-        
+
         # Подключить сигналы вкладки
         tab.title_changed.connect(lambda title: self._update_tab_title(tab, title))
         tab.url_changed.connect(self.tab_url_changed.emit)
@@ -146,6 +148,7 @@ class TabManager(QTabWidget):
     
     def close_tab(self, index: int):
         """Закрыть вкладку"""
+        logger.info('closing a tab...')
         if self.count() == 1:
             #? Если это последняя вкладка, закрыть браузер полностью
             sys.exit()
