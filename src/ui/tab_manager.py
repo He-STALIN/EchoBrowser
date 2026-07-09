@@ -1,14 +1,15 @@
 """Менеджер вкладок браузера"""
 
-from PyQt6.QtWidgets import QTabWidget
+from PyQt6.QtWidgets import QTabWidget, QApplication
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineFullScreenRequest
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineFullScreenRequest, QWebEnginePage
 from PyQt6.QtCore import pyqtSignal, QUrl, Qt
 from PyQt6.QtGui import QIcon
 import sys
 
 from src.utils import format_url, get_home_page_url
 from src.utils import default_logger as logger
+from src.ui.contextMenu import ContextMenu
 import config
 
 def _setup_params(self):
@@ -35,6 +36,10 @@ def _setup_params(self):
         QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies
     )
 
+    self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu) #? указываем, чтобы использовал наше контекстное меню
+
+    QWebEngineProfile.defaultProfile().setHttpUserAgent(config.CUSTOM_UA) #? устанавливаем кастомный UserAgent
+
 class BrowserTab(QWebEngineView):
     """Отдельная вкладка браузера"""
     
@@ -48,7 +53,6 @@ class BrowserTab(QWebEngineView):
     
     def __init__(self, url: str = "about:blank"):
         super().__init__()
-        
         # Подключить сигналы
         self.titleChanged.connect(self._on_title_changed)
         self.urlChanged.connect(self._on_url_changed)
@@ -56,11 +60,12 @@ class BrowserTab(QWebEngineView):
         self.loadStarted.connect(self.LStarted.emit)
         self.loadFinished.connect(self.LFinished.emit)
         self.iconChanged.connect(self.IChanged.emit)
+        self.page().fullScreenRequested.connect(self.FS_request.emit)
+
+        self.contextmenu = ContextMenu(self)    #? Свое контекстное меню
+        self.customContextMenuRequested.connect(self.contextmenu.show_at)
 
         _setup_params(self) #? Выносим параменты в отдельную функцию, чтобы избежать путаницы в писанине кода
-
-        QWebEngineProfile.defaultProfile().setHttpUserAgent(config.CUSTOM_UA)
-        self.page().fullScreenRequested.connect(self.FS_request.emit)
         
         # Загрузить страницу
         if url != "about:blank":
