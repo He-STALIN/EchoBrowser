@@ -30,6 +30,9 @@ def _setup_params(self):
     self.settings().setAttribute(
         QWebEngineSettings.WebAttribute.LocalStorageEnabled, config.LOCAL_STORAGE_EN
     )
+    self.settings().setAttribute(
+        QWebEngineSettings.WebAttribute.JavascriptEnabled, True
+    )
 
     #? включаем сохранение куки
     QWebEngineProfile.defaultProfile().setPersistentCookiesPolicy(
@@ -39,6 +42,8 @@ def _setup_params(self):
     self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu) #? указываем, чтобы использовал наше контекстное меню
 
     QWebEngineProfile.defaultProfile().setHttpUserAgent(config.CUSTOM_UA) #? устанавливаем кастомный UserAgent
+
+    self.page().setDevToolsPage(self.page())
 
 class BrowserTab(QWebEngineView):
     """Отдельная вкладка браузера"""
@@ -66,7 +71,7 @@ class BrowserTab(QWebEngineView):
         self.customContextMenuRequested.connect(self.contextmenu.show_at)
 
         _setup_params(self) #? Выносим параменты в отдельную функцию, чтобы избежать путаницы в писанине кода
-        
+
         # Загрузить страницу
         if url != "about:blank":
             self.setUrl(QUrl(format_url(url)))
