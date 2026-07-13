@@ -12,6 +12,7 @@ class NavigationBar(QWidget):
     forward_clicked = pyqtSignal()
     reload_clicked = pyqtSignal()
     home_clicked = pyqtSignal()
+    about_clicked = pyqtSignal()
     settings_clicked = pyqtSignal()
     new_tab_clicked = pyqtSignal()
     
@@ -53,6 +54,13 @@ class NavigationBar(QWidget):
         self.home_btn.clicked.connect(self.home_clicked.emit)
         self.home_btn.setToolTip("Главная (Alt+Home)")
         layout.addWidget(self.home_btn)
+
+        self.about_btn = QPushButton("I")
+        self.about_btn.setMaximumWidth(40)
+        self.about_btn.setProperty('class', 'ToolBtn')
+        self.about_btn.clicked.connect(self.about_clicked.emit)
+        self.about_btn.setToolTip("О браузере")
+        layout.addWidget(self.about_btn)
         
         # Адресная строка
         self.url_bar = QLineEdit()

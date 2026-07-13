@@ -8,7 +8,7 @@ from src.ui.tab_manager import TabManager
 from src.ui.navigation import NavigationBar
 from src.ui.styles import get_stylesheet
 from src.settings.settings_dialog import SettingsDialog, settings
-from src.utils import get_home_page_url
+from src.utils import get_home_page_url, get_about_page_url
 from src.utils import default_logger as logger
 import config
 
@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
         self.navigation_bar.forward_clicked.connect(self.go_forward)
         self.navigation_bar.reload_clicked.connect(self.reload_page)
         self.navigation_bar.home_clicked.connect(self.load_home_page)
+        self.navigation_bar.about_clicked.connect(self.load_about_page)
         self.navigation_bar.settings_clicked.connect(self.open_settings)
         self.navigation_bar.new_tab_clicked.connect(self.new_tab)
         layout.addWidget(self.navigation_bar)
@@ -192,6 +193,10 @@ class MainWindow(QMainWindow):
         home_url = get_home_page_url()
         self.navigate_to_url(home_url)
     
+    def load_about_page(self):
+        about_url = get_about_page_url()
+        self.navigate_to_url(about_url)
+
     def _on_tab_url_changed(self, url: str):
         """Обработка изменения URL в текущей вкладке"""
         self.navigation_bar.set_url(url)
@@ -201,18 +206,6 @@ class MainWindow(QMainWindow):
         settings_dialog = SettingsDialog(self)
         if settings_dialog.show() == settings_dialog.accepted:
             self.apply_theme()
-    
-    def show_about(self):
-        """Показать информацию о браузере"""
-        from PyQt6.QtWidgets import QMessageBox
-        QMessageBox.about(
-            self,
-            "О браузере EchoBrowser",
-            f"EchoBrowser v0.2.3\n\n"
-            f"Современный браузер на PyQt6\n\n"
-            f"© 2024 Echo Project\n"
-            f"Все права защищены"
-        )
     
     def closeEvent(self, event):
         """Обработка закрытия окна"""
