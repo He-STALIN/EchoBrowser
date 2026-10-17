@@ -7,17 +7,20 @@ from PyQt6.QtCore import pyqtSignal
 class NavigationBar(QWidget):
     """Панель навигации с адресной строкой и кнопками"""
     
-    navigate_to_url = pyqtSignal(str)  # Пользователь ввел URL
-    back_clicked = pyqtSignal()
-    forward_clicked = pyqtSignal()
-    reload_clicked = pyqtSignal()
-    home_clicked = pyqtSignal()
-    about_clicked = pyqtSignal()
-    settings_clicked = pyqtSignal()
-    new_tab_clicked = pyqtSignal()
+    navigate_to_url = pyqtSignal(str)   # Пользователь ввел URL
+    back_clicked = pyqtSignal()         # кнопка "назад" нажата
+    forward_clicked = pyqtSignal()      # кнопка "вперед" нажата
+    reload_clicked = pyqtSignal()       # кнопка "перезагрузить" нажата
+    home_clicked = pyqtSignal()         # кнопка "домой" нажата
+    about_clicked = pyqtSignal()        # кнопка "о нас" нажата
+    settings_clicked = pyqtSignal()     # кнопка "настроки" нажата
+    new_tab_clicked = pyqtSignal()      # кнопка "новая вкладка" нажата
+    state_update_require = pyqtSignal()
+    state_update_recieve = pyqtSignal(dict)
     
     def __init__(self):
         super().__init__()
+        self.state_update_recieve.connect(self._sync_state) # connect to update
         self.init_ui()
     
     def init_ui(self):
@@ -28,6 +31,7 @@ class NavigationBar(QWidget):
         
         # Кнопка назад
         self.back_btn = QPushButton("←")
+        self.back_btn.setVisible(False)
         self.back_btn.setMaximumWidth(40)
         self.back_btn.clicked.connect(self.back_clicked.emit)
         self.back_btn.setToolTip("Назад")
@@ -35,6 +39,7 @@ class NavigationBar(QWidget):
         
         # Кнопка вперед
         self.forward_btn = QPushButton("→")
+        self.forward_btn.setVisible(False)
         self.forward_btn.setMaximumWidth(40)
         self.forward_btn.clicked.connect(self.forward_clicked.emit)
         self.forward_btn.setToolTip("Вперед")
@@ -88,15 +93,16 @@ class NavigationBar(QWidget):
         url = self.url_bar.text().strip()
         if url:
             self.navigate_to_url.emit(url)
+
+        self._require_update()
+
+    def _require_update(self):
+        self.state_update_require.emit()
+
+    def _sync_state(self, states: dict):
+        self.back_btn.setVisible(bool(states.get("canBack", False)))
+        self.forward_btn.setVisible(bool(states.get("canForward", False)))
     
     def set_url(self, url: str):
         """Установить URL в адресной строке"""
         self.url_bar.setText(url)
-    
-    def set_back_enabled(self, enabled: bool):
-        """Включить/отключить кнопку назад"""
-        self.back_btn.setEnabled(enabled)
-    
-    def set_forward_enabled(self, enabled: bool):
-        """Включить/отключить кнопку вперед"""
-        self.forward_btn.setEnabled(enabled)

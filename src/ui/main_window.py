@@ -1,7 +1,7 @@
 """Главное окно браузера"""
 
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QProgressBar
-from PyQt6.QtGui import QKeySequence, QIcon, QPixmap
+from PyQt6.QtGui import QKeySequence, QIcon
 from PyQt6.QtWebEngineCore import QWebEngineFullScreenRequest
 
 from src.ui.tab_manager import TabManager
@@ -40,7 +40,8 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
-        
+
+
         # Панель навигации
         self.navigation_bar = NavigationBar()
         self.navigation_bar.navigate_to_url.connect(self.navigate_to_url)
@@ -53,12 +54,15 @@ class MainWindow(QMainWindow):
         self.navigation_bar.new_tab_clicked.connect(self.new_tab)
         layout.addWidget(self.navigation_bar)
 
+
+        # бар загрузки
         self.progress_bar = QProgressBar()
         self.progress_bar.setMaximum(100)
         self.progress_bar.setObjectName("progressBar")
         self.progress_bar.setTextVisible(False)
         self.progress_bar.setVisible(False)
         layout.addWidget(self.progress_bar)
+
 
         # Менеджер вкладок
         self.tab_manager = TabManager()
@@ -68,11 +72,12 @@ class MainWindow(QMainWindow):
         self.tab_manager.lStarted.connect(self.on_load_started)
         self.tab_manager.lFinished.connect(self.on_load_finished)
         layout.addWidget(self.tab_manager)
-        
+        self.navigation_bar.state_update_require.connect(self.tab_manager.state_update_require.emit)
+        self.tab_manager.state_update_recieve.connect(self.navigation_bar.state_update_recieve.emit)
         central_widget.setLayout(layout)
         
         # Меню
-        #self.create_menu_bar()
+        # self.create_menu_bar()
     
     def create_menu_bar(self):
         """Создать меню браузера"""
@@ -121,9 +126,9 @@ class MainWindow(QMainWindow):
         
         view_menu.addSeparator()
         
-        fullscreen_action = view_menu.addAction("Полноэкранный режим")
-        fullscreen_action.triggered.connect(self.toggle_fullscreen)
-        fullscreen_action.setShortcut(QKeySequence.StandardKey.FullScreen)
+        # fullscreen_action = view_menu.addAction("Полноэкранный режим")
+        # fullscreen_action.triggered.connect(self.toggle_fullscreen)
+        # fullscreen_action.setShortcut(QKeySequence.StandardKey.FullScreen)
         
         # Меню инструментов
         tools_menu = menubar.addMenu("Инструменты")
@@ -134,8 +139,8 @@ class MainWindow(QMainWindow):
         # Меню помощи
         help_menu = menubar.addMenu("Справка")
         
-        about_action = help_menu.addAction("О браузере")
-        about_action.triggered.connect(self.show_about)
+        # about_action = help_menu.addAction("О браузере")
+        # about_action.triggered.connect(self.show_about)
     
     def on_progress_update(self, progress: int):
         self.progress_bar.setValue(progress)
@@ -174,12 +179,14 @@ class MainWindow(QMainWindow):
         current_tab = self.tab_manager.get_current_tab()
         if current_tab:
             current_tab.back()
+            self.tab_manager.state_update_require.emit()
     
     def go_forward(self):
         """Перейти вперед"""
         current_tab = self.tab_manager.get_current_tab()
         if current_tab:
             current_tab.forward()
+            self.tab_manager.state_update_require.emit()
     
     def reload_page(self):
         """Обновить страницу"""
@@ -187,6 +194,7 @@ class MainWindow(QMainWindow):
         if current_tab:
             logger.info('reloading page...')
             current_tab.reload()
+            self.tab_manager.state_update_require.emit()
     
     def load_home_page(self):
         """Загрузить главную страницу"""
@@ -204,6 +212,7 @@ class MainWindow(QMainWindow):
     def open_settings(self):
         """Открыть диалог настроек"""
         settings_dialog = SettingsDialog(self)
+        settings_dialog.theme_update.connect(self.apply_theme)
         if settings_dialog.show() == settings_dialog.accepted:
             self.apply_theme()
     

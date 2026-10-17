@@ -1,0 +1,23 @@
+[project]
+name = "EchoBrowser"
+version = "0.2.4"
+description = "Browser for access to internet"
+authors = [
+    {name = 'He-STALIN'},
+    {email = 'hene.stalin@gmail.com'}
+]
+dependencies = ['pyqt6>=6.11.0', 'pyqt6-webengine>=6.11.0', 'colorlog>=6.10.1', 'pyautogui']
+
+[tool.pyinstaller]
+name = "EchoBrowser"
+entry_point = "main:main"
+hidden_imports = [
+    'pyqt6',
+    'pyqt6-webengine',
+    'colorlog',
+    'pyautogui'
+]
+excludes = [
+    'tkinter',
+    'pydoc'
+]

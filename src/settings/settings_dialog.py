@@ -3,12 +3,14 @@
 from PyQt6.QtWidgets import(QDialog, QVBoxLayout, QHBoxLayout, QTabWidget, 
                             QWidget, QComboBox, QCheckBox, QSpinBox, QPushButton,
                             QGroupBox, QFormLayout, QSizePolicy)
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from .config import settings
 
 
 class SettingsDialog(QDialog):
     """Оверлейный диалог настроек (прозрачный фон, центральная карточка)."""
+
+    theme_update = pyqtSignal()
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -196,6 +198,8 @@ class SettingsDialog(QDialog):
         settings.set("theme", self.theme.currentText())
         settings.set("font_size", self.font_size.value())
         settings.set("show_bookmarks_bar", self.bookmarks_bar.isChecked())
+
+        self.theme_update.emit()
         
         self.accept()
     

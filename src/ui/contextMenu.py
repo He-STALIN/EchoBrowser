@@ -1,6 +1,7 @@
 from PyQt6.QtCore import pyqtSignal, QPoint
 from PyQt6.QtWidgets import QMenu, QApplication
 from PyQt6.QtGui import QAction, QKeySequence
+import pyautogui
 
 
 class ContextMenu(QMenu):
@@ -128,4 +129,8 @@ class ContextMenu(QMenu):
 
     def show_at(self, position: QPoint) -> None:
         """Показывает меню в глобальной позиции."""
+
+        xy = pyautogui.position()
+        position = QPoint(xy.x, xy.y)
+
         self.popup(position)
